@@ -17,7 +17,7 @@ helm-chart:
             # plugin-helm serves the step:helm-release word over the provider registry —
             # requiring it puts it in the deploy's scanned candy set so loadProjectPlugins
             # builds + connects it before the install timeline dispatches the step.
-            - plugin-helm
+            - '@github.com/opencharly/plugin-helm/candy/plugin-helm:v2026.237.1423'
         plan:
             - run: wait for the k3s node to be Ready in-venue — the k3s-server candy's node-ready check step does not run during fleet add, so this candy waits itself
               id: hc-wait-node-ready
