@@ -1,7 +1,5 @@
-version: 2026.232.0520
 helm-chart:
     candy:
-        version: 2026.225.1707
         description: |
             Installs a real chart (prometheus-pushgateway) into the k3s cluster via the
             external helm-release install step, after waiting in-venue for the node to be
