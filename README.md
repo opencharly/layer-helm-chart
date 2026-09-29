@@ -10,8 +10,11 @@ plan runs in verify-only mode (mutating steps skipped) and `fleet add` lowers
 only candy plans' `run:` steps, so the mutating install must live in a candy
 whose `run:` steps execute during `fleet add` — never in the bed's own plan. The
 `k3s-server` candy's node-ready check is a `check:` step that does not run during
-`fleet add`, so this candy waits for the node itself (`kubectl wait`, no sleeps)
-before the `helm upgrade --install --wait` can schedule the chart's pods.
+`fleet add`, so this candy waits for the node itself before the
+`helm upgrade --install --wait` can schedule the chart's pods: it polls the
+apiserver's `/readyz` in a bounded `until` loop (`sleep 1` cadence, 300s
+deadline) until the kubeconfig's API server answers, then runs
+`kubectl wait --for=condition=Ready node --all`.
 
 ## What it provides
 
@@ -24,9 +27,12 @@ before the `helm upgrade --install --wait` can schedule the chart's pods.
 
 ## How to use it
 
-Compose the layer by pinning this repo in a box's `candy:` list:
+Compose the layer into an image: the image node names this repo in its inner
+`candy:` list (the outer `candy:` key holds the image spec — `base:` plus the
+list of candies):
 
 ```yaml
+version: 2026.261.1747
 my-k8s-box:
   candy:
     base: cachyos

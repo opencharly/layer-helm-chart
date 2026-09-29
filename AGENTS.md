@@ -44,16 +44,16 @@ carries no `skill:` entity. The gap is recorded against
 - Edit the `helm-chart:` candy entity in `charly.yml`.
 - Keep the mutating install in this candy's `run:` steps — the bed's own plan is
   verify-only and does not lower `run:` steps during `fleet add`.
-- The node-ready wait uses `kubectl wait` (bounded `sleep 1` polling of
-  `/readyz`), never a bare sleep — keep it that way.
+- The node-ready wait has two phases in one `run:` step: a bounded `until` loop
+  that polls the apiserver's `/readyz` at a `sleep 1` cadence (300s deadline)
+  until the kubeconfig's API server answers, then `kubectl wait
+  --for=condition=Ready node --all`. Neither is a bare sleep, and `kubectl wait`
+  does not itself poll `/readyz` — the two are separate phases. Keep both.
 
 ## Landing
 
-- PR-only. Every change lands through a pull request; the org-required
-  `charly/pr-validator` validates the diff and body and arms native auto-merge
-  on PASS. Direct pushes to `main` are blocked.
-- History lives in `CHANGELOG/` (written by `tag-on-merge` at merge time); the
-  PR body IS the changelog.
-- The authoritative rulebook is the umbrella `AGENTS.md` in
-  `opencharly/opencharly` and `charly/AGENTS.md` in the charly repo. Do not
-  restate its rules here.
+Every change lands through a pull request gated by the org-required
+`charly/pr-validator`. The landing mechanics — the `feat/` branch, the PR-only
+rule, `CHANGELOG/` history, and the tag-on-merge CalVer — are owned by
+`/charly-internals:git-workflow` and the umbrella `AGENTS.md` /
+`charly/AGENTS.md`; this signpost points at them and does not restate them.
