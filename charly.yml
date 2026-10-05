@@ -4,10 +4,10 @@ helm-chart:
             Installs a real chart (prometheus-pushgateway) into the k3s cluster via the
             external helm-release install step, after waiting in-venue for the node to be
             Ready. This is the check-helm-vm bed's install leg: the bed's own plan runs in
-            verify-only mode (mutating steps skipped) and fleet add lowers only CANDY
+            verify-only mode (mutating steps skipped) and deploy add lowers only CANDY
             plans' run: steps, so the mutating install must live in a candy whose run:
-            steps execute during fleet add — never in the bed's own plan. The k3s-server
-            candy's node-ready check is a check: step that does not run during fleet add,
+            steps execute during deploy add — never in the bed's own plan. The k3s-server
+            candy's node-ready check is a check: step that does not run during deploy add,
             so this candy waits for the node itself (kubectl wait, no sleeps) before the
             helm upgrade --install --wait can schedule the chart's pods.
         require:
@@ -17,7 +17,7 @@ helm-chart:
             # builds + connects it before the install timeline dispatches the step.
             - '@github.com/opencharly/plugin-helm/candy/plugin-helm:v2026.272.0149'
         plan:
-            - run: wait for the k3s node to be Ready in-venue — the k3s-server candy's node-ready check step does not run during fleet add, so this candy waits itself
+            - run: wait for the k3s node to be Ready in-venue — the k3s-server candy's node-ready check step does not run during deploy add, so this candy waits itself
               id: hc-wait-node-ready
               command: |
                   set -euo pipefail

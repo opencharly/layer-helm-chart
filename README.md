@@ -6,11 +6,11 @@ The `check-helm-vm` bed's install leg — a real chart
 
 `helm-chart` installs a chart into the k3s cluster after waiting in-venue for the
 node to be Ready. This is the `check-helm-vm` bed's install leg: the bed's own
-plan runs in verify-only mode (mutating steps skipped) and `fleet add` lowers
+plan runs in verify-only mode (mutating steps skipped) and `deploy add` lowers
 only candy plans' `run:` steps, so the mutating install must live in a candy
-whose `run:` steps execute during `fleet add` — never in the bed's own plan. The
+whose `run:` steps execute during `deploy add` — never in the bed's own plan. The
 `k3s-server` candy's node-ready check is a `check:` step that does not run during
-`fleet add`, so this candy waits for the node itself before the
+`deploy add`, so this candy waits for the node itself before the
 `helm upgrade --install --wait` can schedule the chart's pods: it polls the
 apiserver's `/readyz` in a bounded `until` loop (`sleep 1` cadence, 300s
 deadline) until the kubeconfig's API server answers, then runs
