@@ -43,7 +43,7 @@ carries no `skill:` entity. The gap is recorded against
 
 - Edit the `helm-chart:` candy entity in `charly.yml`.
 - Keep the mutating install in this candy's `run:` steps — the bed's own plan is
-  verify-only and does not lower `run:` steps during `fleet add`.
+  verify-only and does not lower `run:` steps during `deploy add`.
 - The node-ready wait has two phases in one `run:` step: a bounded `until` loop
   that polls the apiserver's `/readyz` at a `sleep 1` cadence (300s deadline)
   until the kubeconfig's API server answers, then `kubectl wait
